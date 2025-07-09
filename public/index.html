@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Lifecycle Manager</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-chart-line"></i>
+            <h2>PLC Manager</h2>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="active" data-tab="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </li>
+            <li data-tab="products">
+                <i class="fas fa-box"></i>
+                <span>Product Catalog</span>
+            </li>
+            <li data-tab="lifecycle">
+                <i class="fas fa-sync-alt"></i>
+                <span>Lifecycle Analysis</span>
+            </li>
+            <li data-tab="analytics">
+                <i class="fas fa-chart-bar"></i>
+                <span>Advanced Analytics</span>
+            </li>
+            <li data-tab="users" id="usersMenuItem" style="display: none;">
+                <i class="fas fa-users"></i>
+                <span>User Management</span>
+            </li>
+            <li data-tab="reports">
+                <i class="fas fa-file-alt"></i>
+                <span>Reports</span>
+            </li>
+        </ul>
+        
+        <div class="sidebar-footer">
+            <div class="sidebar-section">
+                <h4>System Status</h4>
+                <div class="performance-item">
+                    <span>Online</span>
+                    <div class="performance-bar">
+                        <div class="performance-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+            </div>
+            <button id="logoutBtn" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <button class="sidebar-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1>Product Lifecycle Manager</h1>
+                </div>
+                <div class="header-right">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search products..." id="searchInput">
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name" id="userFullName">System Administrator</span>
+                        <div class="user-avatar">
+                            <img src="https://via.placeholder.com/32" alt="User Avatar">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="addProductBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Product
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="content-section active">
+                <!-- Top Stats Cards - Product Lifecycle Information -->
+                <div class="top-cards">
+                    <div class="dashboard-card card-total">
+                        <div class="card-header">
+                            <h3>Total Products</h3>
+                            <i class="fas fa-cubes"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-value"><span id="totalProducts">0</span></div>
+                            <div class="card-trend">All Products</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card card-introduction">
+                        <div class="card-header">
+                            <h3>Introduction Stage</h3>
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-value"><span id="introductionProducts">0</span></div>
+                            <div class="card-trend">New Products</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card card-growth">
+                        <div class="card-header">
+                            <h3>Growth Stage</h3>
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-value"><span id="growthProducts">0</span></div>
+                            <div class="card-trend">Growing Products</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Second Row - Maturity and Decline -->
+                <div class="second-cards">
+                    <div class="dashboard-card card-maturity">
+                        <div class="card-header">
+                            <h3>Maturity Stage</h3>
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-value"><span id="maturityProducts">0</span></div>
+                            <div class="card-trend">Mature Products</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card card-decline">
+                        <div class="card-header">
+                            <h3>Decline Stage</h3>
+                            <i class="fas fa-chart-line-down"></i>
+                        </div>
+                        <div class="card-content">
+                            <div class="card-value"><span id="declineProducts">0</span></div>
+                            <div class="card-trend">Declining Products</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Segmentasi Bisnis Section -->
+                <div class="segment-section">
+                    <h3 class="section-title"><i class="fas fa-industry"></i> Segmentasi Bisnis</h3>
+                    <div class="segment-cards">
+                        <div class="segment-card card-pembangkitan">
+                            <div class="segment-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="segment-info">
+                                <h4>Pembangkitan</h4>
+                                <div class="segment-value" id="pembangkitanProducts">0</div>
+                            </div>
+                        </div>
+                        
+                        <div class="segment-card card-transmisi">
+                            <div class="segment-icon">
+                                <i class="fas fa-broadcast-tower"></i>
+                            </div>
+                            <div class="segment-info">
+                                <h4>Transmisi</h4>
+                                <div class="segment-value" id="transmisiProducts">0</div>
+                            </div>
+                        </div>
+                        
+                        <div class="segment-card card-distribusi">
+                            <div class="segment-icon">
+                                <i class="fas fa-network-wired"></i>
+                            </div>
+                            <div class="segment-info">
+                                <h4>Distribusi</h4>
+                                <div class="segment-value" id="distribusiProducts">0</div>
+                            </div>
+                        </div>
+                        
+                        <div class="segment-card card-korporat">
+                            <div class="segment-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="segment-info">
+                                <h4>Korporat</h4>
+                                <div class="segment-value" id="korporatProducts">0</div>
+                            </div>
+                        </div>
+                        
+                        <div class="segment-card card-pelayanan">
+                            <div class="segment-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="segment-info">
+                                <h4>Pelayanan Pelanggan</h4>
+                                <div class="segment-value" id="pelayananProducts">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Charts Section -->
+                <div class="dashboard-bottom">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Lifecycle Distribution</h3>
+                        </div>
+                        <canvas id="lifecycleChart"></canvas>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Segment Distribution</h3>
+                        </div>
+                        <canvas id="segmentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Tab -->
+            <div id="products" class="content-section">
+                <div class="section-header">
+                    <h2>Product Catalog</h2>
+                    <button class="btn btn-primary" onclick="openProductModal()">
+                        <i class="fas fa-plus"></i>
+                        Add Product
+                    </button>
+                </div>
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Lifecycle Tab -->
+            <div id="lifecycle" class="content-section">
+                <div class="section-header">
+                    <h2>Lifecycle Analysis</h2>
+                </div>
+                <div class="analytics-grid">
+                    <div class="chart-card">
+                        <h3>Product Lifecycle Distribution</h3>
+                        <canvas id="lifecycleChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics" class="content-section">
+                <div class="section-header">
+                    <h2>Advanced Analytics</h2>
+                </div>
+                <div class="analytics-grid">
+                    <div class="chart-card">
+                        <h3>Product Performance</h3>
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Category Distribution</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="users" class="content-section">
+                <div class="section-header">
+                    <h2>User Management</h2>
+                    <button class="btn btn-primary" id="addUserBtn">
+                        <i class="fas fa-plus"></i>
+                        Add User
+                    </button>
+                </div>
+                
+                <div class="users-grid">
+                    <div class="users-table-container">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Last Login</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- Users will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports" class="content-section">
+                <div class="section-header">
+                    <h2>Reports</h2>
+                </div>
+                <div class="analytics-grid">
+                    <div class="chart-card">
+                        <h3>Monthly Report</h3>
+                        <p>Generate and download monthly reports</p>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-download"></i>
+                            Download Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="userModalTitle">Add User</h2>
+                <button class="close-btn" id="closeUserModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="userForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="userUsername">Username *</label>
+                        <input type="text" id="userUsername" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email *</label>
+                        <input type="email" id="userEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userFullName">Full Name</label>
+                        <input type="text" id="userFullName" name="full_name">
+                    </div>
+                    <div class="form-group">
+                        <label for="userRole">Role</label>
+                        <select id="userRole" name="role">
+                            <option value="user">User</option>
+                            <option value="manager">Manager</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="passwordGroup">
+                        <label for="userPassword">Password *</label>
+                        <input type="password" id="userPassword" name="password">
+                    </div>
+                    <div class="form-group" id="statusGroup">
+                        <label for="userStatus">Status</label>
+                        <select id="userStatus" name="is_active">
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelUserBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="saveUserBtn">Save User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Product</h2>
+                <button class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="productForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="productName">Product Name:</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Category:</label>
+                        <select id="productCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="Software">Software</option>
+                            <option value="Hardware">Hardware</option>
+                            <option value="Service">Service</option>
+                            <option value="Platform">Platform</option>
+                            <option value="Energy">Energy</option>
+                            <option value="Infrastructure">Infrastructure</option>
+                            <option value="Monitoring">Monitoring</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productSegment">Segmentasi:</label>
+                        <select id="productSegment" required>
+                            <option value="">Pilih Segmentasi</option>
+                            <option value="Pembangkitan">Pembangkitan</option>
+                            <option value="Distribusi">Distribusi</option>
+                            <option value="Transmisi">Transmisi</option>
+                            <option value="Korporat">Korporat</option>
+                            <option value="Pelayanan Pelanggan">Pelayanan Pelanggan</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="productDescription">Description:</label>
+                        <textarea id="productDescription" rows="3" placeholder="Describe the product and its key features..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="productLifecycle">Lifecycle Stage:</label>
+                        <select id="productLifecycle" required>
+                            <option value="Introduction">Introduction</option>
+                            <option value="Growth">Growth</option>
+                            <option value="Maturity">Maturity</option>
+                            <option value="Decline">Decline</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productLaunchDate">Launch Date:</label>
+                        <input type="date" id="productLaunchDate">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        Save Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
